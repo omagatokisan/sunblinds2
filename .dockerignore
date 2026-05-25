@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.git
+.gitignore
+.env
+.env*.local
+*.md
+!README.md
+Desktop
+tools
+*.zip
+data/cms/.admin-hash
+data/cms/login-attempts.json

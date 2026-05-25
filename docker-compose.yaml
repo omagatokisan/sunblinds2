@@ -1,0 +1,24 @@
+services:
+  sunblinds:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      # Nastavte v Coolify → Environment Variables:
+      # SESSION_SECRET=
+      # ADMIN_PASSWORD=
+      # NEXT_PUBLIC_SITE_URL=https://vase-domena.cz
+      # NEXT_PUBLIC_SUBPAGES_CONTENT=1
+    volumes:
+      - cms-data:/app/data/cms
+      - uploads:/app/public/uploads
+
+volumes:
+  cms-data:
+  uploads:

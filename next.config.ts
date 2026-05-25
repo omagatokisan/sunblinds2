@@ -4,7 +4,7 @@ const staticExport = process.env.STATIC_EXPORT === "1";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  output: staticExport ? "export" : undefined,
+  output: staticExport ? "export" : "standalone",
   trailingSlash: staticExport ? true : undefined,
   images: {
     unoptimized: staticExport,

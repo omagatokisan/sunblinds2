@@ -5,7 +5,7 @@ Moderní prezentační web (Next.js 15, React 19, Tailwind 4) pro stínění, ok
 ## Rychlý start (lokálně)
 
 ```bash
-git clone https://github.com/VASE-USERNAME/sunblinds.git
+git clone https://github.com/omagatokisan/sunblinds.git
 cd sunblinds
 npm install
 cp .env.example .env.local   # Windows: copy .env.example .env.local
@@ -15,6 +15,42 @@ npm run dev
 Otevřete [http://localhost:3000](http://localhost:3000).
 
 > **Poznámka:** Ve výchozím stavu zobrazují podstránky (kromě homepage) landing „Aktualizace v přípravě“. Pro plný obsah nastavte `NEXT_PUBLIC_SUBPAGES_CONTENT=1` v `.env.local`.
+
+## Nasazení na Coolify (Docker Compose)
+
+Soubor `docker-compose.yaml` je v kořeni repozitáře — Coolify ho hledá na cestě `/docker-compose.yaml`.
+
+### Nastavení v Coolify
+
+| Pole | Hodnota |
+|------|---------|
+| Build Pack | **Docker Compose** |
+| Base Directory | `/` |
+| Docker Compose Location | `/docker-compose.yaml` |
+| Branch | `main` |
+
+### Environment Variables (povinné)
+
+| Proměnná | Popis |
+|----------|--------|
+| `SESSION_SECRET` | Náhodný řetězec min. 32 znaků |
+| `ADMIN_PASSWORD` | Heslo admina (min. 10 znaků, při prvním startu vytvoří hash) |
+| `NEXT_PUBLIC_SITE_URL` | `https://vase-domena.cz` |
+| `NEXT_PUBLIC_SUBPAGES_CONTENT` | `1` — zobrazí plné podstránky místo landing stránky |
+
+### Po deployi
+
+1. Otevřete web na přiřazené doméně.
+2. Admin: `/admin/login`
+3. Pokud admin nejde, zkontrolujte logy — `ADMIN_PASSWORD` musí být nastavené před prvním startem kontejneru.
+
+Lokální test Dockeru:
+
+```bash
+docker compose up --build
+```
+
+---
 
 ## Nasazení na běžný webhosting (FTP / Apache)
 
