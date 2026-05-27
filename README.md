@@ -14,8 +14,6 @@ npm run dev
 
 Otevřete [http://localhost:3000](http://localhost:3000).
 
-> **Poznámka:** Ve výchozím stavu zobrazují podstránky (kromě homepage) landing „Aktualizace v přípravě“. Pro plný obsah nastavte `NEXT_PUBLIC_SUBPAGES_CONTENT=1` v `.env.local`.
-
 ## Nasazení na Coolify (Docker Compose)
 
 Soubor `docker-compose.yaml` je v kořeni repozitáře — Coolify ho hledá na cestě `/docker-compose.yaml`.
@@ -36,7 +34,6 @@ Soubor `docker-compose.yaml` je v kořeni repozitáře — Coolify ho hledá na 
 | `SESSION_SECRET` | Náhodný řetězec min. 32 znaků |
 | `ADMIN_PASSWORD` | Heslo admina (min. 10 znaků, při prvním startu vytvoří hash) |
 | `NEXT_PUBLIC_SITE_URL` | `https://vase-domena.cz` |
-| `NEXT_PUBLIC_SUBPAGES_CONTENT` | `1` — zobrazí plné podstránky místo landing stránky |
 
 ### Po deployi
 

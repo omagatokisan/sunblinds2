@@ -9,12 +9,9 @@ import { Container } from "@/components/ui/Container";
 import { IMG_QUALITY, imgClass, imgSizes } from "@/lib/image-presets";
 import { HomeHeroVideo } from "@/components/layout/HomeHeroVideo";
 import { resolvePageBanner, type PageBannerContext } from "@/lib/page-banner";
-import { isSubpageLandingOnly } from "@/lib/site-gates";
 
 export function GlobalPageBanner(ctx: PageBannerContext) {
   const pathname = usePathname();
-  if (isSubpageLandingOnly(pathname)) return null;
-
   const content = resolvePageBanner(pathname, ctx);
 
   if (!content) return null;

@@ -14,7 +14,6 @@ services:
       # SESSION_SECRET=
       # ADMIN_PASSWORD=
       # NEXT_PUBLIC_SITE_URL=https://vase-domena.cz
-      # NEXT_PUBLIC_SUBPAGES_CONTENT=1
     volumes:
       - cms-data:/app/data/cms
       - uploads:/app/public/uploads
