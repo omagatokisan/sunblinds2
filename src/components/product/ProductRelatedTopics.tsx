@@ -12,16 +12,11 @@ export function ProductRelatedTopics({ topics }: Props) {
   if (!topics.length) return null;
 
   return (
-    <section className="pd-section pd-section--soft" id="souvisejici">
+    <section className="pd-section" id="souvisejici">
       <div className="hd-shell">
-        <SectionHead
-          eyebrow="Navazující kroky"
-          title="Co dál?"
-          lead="Showroom, servis, další modely nebo nezávazná poptávka — vyberte další krok."
-          align="left"
-        />
+        <SectionHead eyebrow="Navazuje" title="Další krok" align="left" />
 
-        <div className="pd-card-grid pd-card-grid--4">
+        <div className="pd-card-grid pd-card-grid--3">
           {topics.map((topic) => (
             <Link key={topic.id} href={topic.href} className="pd-card group">
               {topic.image ? (

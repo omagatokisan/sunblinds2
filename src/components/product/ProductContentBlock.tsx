@@ -12,13 +12,9 @@ export function ProductContentBlock({ product }: Props) {
   const showFeatures = features.length > 0 && product.specs.length === 0;
 
   return (
-    <section className="pd-section pd-section--soft" id="popis">
+    <section className="pd-section pd-section--raised" id="popis">
       <div className="hd-shell">
-        <SectionHead
-          eyebrow="O produktu"
-          title="Popis a využití"
-          align="left"
-        />
+        <SectionHead eyebrow="Popis" title="Využití a vlastnosti" align="left" />
 
         <div className="pd-content">
           <div>
@@ -28,7 +24,7 @@ export function ProductContentBlock({ product }: Props) {
               <div className="pd-content__features">
                 <p className="hd-eyebrow">
                   <span className="hd-eyebrow__mark" aria-hidden />
-                  Hlavní přednosti
+                  Přednosti
                 </p>
                 <ul>
                   {features.map((f) => (

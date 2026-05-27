@@ -6,11 +6,10 @@ import { Container } from "@/components/ui/Container";
 
 const SECTIONS = [
   { id: "technika", label: "Technika" },
-  { id: "design", label: "Design" },
+  { id: "design", label: "Varianty" },
   { id: "popis", label: "Popis" },
   { id: "ke-stazeni", label: "Ke stažení" },
-  { id: "inspirace", label: "Inspirace" },
-  { id: "souvisejici", label: "Související" },
+  { id: "souvisejici", label: "Další krok" },
 ] as const;
 
 type Section = (typeof SECTIONS)[number];

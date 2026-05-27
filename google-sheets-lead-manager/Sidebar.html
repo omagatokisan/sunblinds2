@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <?!= include('Styles'); ?>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <h1>Lead Manager</h1>
+      <div class="topbar-actions">
+        <button type="button" class="btn btn-primary" id="btnAdd">+ New</button>
+        <button type="button" class="btn btn-ghost" id="btnRefresh" title="Refresh">↻</button>
+      </div>
+    </header>
+
+    <section class="stats" id="stats">
+      <div class="stat"><span class="stat-val" id="statFiltered">0</span><span class="stat-lbl">shown</span></div>
+      <div class="stat"><span class="stat-val" id="statTotal">0</span><span class="stat-lbl">total</span></div>
+      <div class="stat"><span class="stat-val" id="statPrice">0</span><span class="stat-lbl">Kč sum</span></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head" id="filterToggle">
+        <span>Filters</span>
+        <span class="chevron" id="filterChevron">▼</span>
+      </div>
+      <div class="panel-body" id="filterPanel">
+        <label class="field">
+          <span>Search all fields</span>
+          <input type="search" id="fGlobal" placeholder="Quick search…" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Name</span>
+          <input type="search" id="fName" placeholder="Filter by name">
+        </label>
+        <label class="field">
+          <span>Number</span>
+          <input type="search" id="fNumber" placeholder="Phone / number">
+        </label>
+        <div class="field-row">
+          <label class="field flex1">
+            <span>Price min (Kč)</span>
+            <input type="number" id="fPriceMin" placeholder="Min" min="0" step="100">
+          </label>
+          <label class="field flex1">
+            <span>Price max (Kč)</span>
+            <input type="number" id="fPriceMax" placeholder="Max" min="0" step="100">
+          </label>
+        </div>
+        <label class="field check">
+          <input type="checkbox" id="fPriceEmpty">
+          <span>Include empty price</span>
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="search" id="fEmail" placeholder="Filter email">
+        </label>
+        <label class="field">
+          <span>Website</span>
+          <input type="search" id="fWebsite" placeholder="Filter website">
+        </label>
+        <label class="field">
+          <span>Description</span>
+          <input type="search" id="fDescription" placeholder="Filter description">
+        </label>
+        <label class="field">
+          <span>Status</span>
+          <select id="fStatus"><option value="">All statuses</option></select>
+        </label>
+        <div class="field-row chips">
+          <label class="chip"><input type="radio" name="hasEmail" value="" checked> Any email</label>
+          <label class="chip"><input type="radio" name="hasEmail" value="yes"> Has email</label>
+          <label class="chip"><input type="radio" name="hasEmail" value="no"> No email</label>
+        </div>
+        <div class="field-row chips">
+          <label class="chip"><input type="radio" name="hasWebsite" value="" checked> Any web</label>
+          <label class="chip"><input type="radio" name="hasWebsite" value="yes"> Has website</label>
+          <label class="chip"><input type="radio" name="hasWebsite" value="no"> No website</label>
+        </div>
+        <div class="field-row">
+          <label class="field flex1">
+            <span>Sort by</span>
+            <select id="fSortBy">
+              <option value="updated">Updated</option>
+              <option value="created">Created</option>
+              <option value="name">Name</option>
+              <option value="predictedPrice">Price</option>
+              <option value="email">Email</option>
+              <option value="status">Status</option>
+            </select>
+          </label>
+          <label class="field flex1">
+            <span>Order</span>
+            <select id="fSortDir">
+              <option value="desc">Newest first</option>
+              <option value="asc">Oldest first</option>
+            </select>
+          </label>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-secondary" id="btnClear">Clear filters</button>
+          <button type="button" class="btn btn-primary" id="btnApply">Apply</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <label class="select-all">
+        <input type="checkbox" id="selectAll"> Select all
+      </label>
+      <select id="bulkStatus" class="bulk-select" disabled>
+        <option value="">Bulk status…</option>
+      </select>
+      <button type="button" class="btn btn-sm" id="btnBulkStatus" disabled>Apply</button>
+      <button type="button" class="btn btn-sm btn-danger" id="btnBulkDelete" disabled>Delete</button>
+      <button type="button" class="btn btn-sm" id="btnExport">Export CSV</button>
+      <label class="btn btn-sm btn-import">
+        Import CSV
+        <input type="file" id="fileImport" accept=".csv,text/csv" hidden>
+      </label>
+    </section>
+
+    <div class="list" id="leadList">
+      <p class="empty">Loading…</p>
+    </div>
+  </div>
+
+  <!-- Edit / Add modal -->
+  <div class="modal hidden" id="modal">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2 id="modalTitle">New lead</h2>
+        <button type="button" class="icon-btn" id="modalClose">×</button>
+      </div>
+      <form id="leadForm">
+        <input type="hidden" id="formId">
+        <label class="field">
+          <span>Name *</span>
+          <input type="text" id="formName" required maxlength="200">
+        </label>
+        <label class="field">
+          <span>Number</span>
+          <input type="tel" id="formNumber" placeholder="+420 …" maxlength="40">
+        </label>
+        <label class="field">
+          <span>Predicted price (Kč)</span>
+          <input type="number" id="formPrice" min="0" step="100" placeholder="0">
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="formEmail" placeholder="info@example.cz">
+        </label>
+        <label class="field">
+          <span>Website</span>
+          <input type="url" id="formWebsite" placeholder="www.example.cz">
+        </label>
+        <label class="field">
+          <span>Description</span>
+          <textarea id="formDescription" rows="4" maxlength="2000" placeholder="Notes, services, context…"></textarea>
+        </label>
+        <label class="field">
+          <span>Status</span>
+          <select id="formStatus"></select>
+        </label>
+        <div class="form-errors hidden" id="formErrors"></div>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" id="btnCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSave">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <?!= include('Client'); ?>
+</body>
+</html>

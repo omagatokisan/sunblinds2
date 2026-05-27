@@ -52,13 +52,13 @@ export function ProductDetailHero({ detail, groupHref, inquiryHref, breadcrumbs 
                 Nezávazně poptat
               </Button>
               <Button href={groupHref} variant="secondary" className="hd-btn">
-                Další modely ve skupině
+                Skupina produktů
               </Button>
             </div>
 
             {siblingItems.length ? (
               <div className="pd-siblings">
-                <p className="pd-siblings__label">Modely ve skupině</p>
+                <p className="pd-siblings__label">Modely</p>
                 <ul className="pd-siblings__list">
                   {siblingItems.map((sib) => (
                     <li key={sib.slug}>

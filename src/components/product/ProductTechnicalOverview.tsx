@@ -15,14 +15,9 @@ export function ProductTechnicalOverview({ product, groupSlug, solutionSlug, det
   if (!details.length) return null;
 
   return (
-    <section className="pd-section pd-section--raised" id="technika">
+    <section className="pd-section" id="technika">
       <div className="hd-shell">
-        <SectionHead
-          eyebrow="Technika"
-          title="Konstrukce a parametry"
-          lead={`Rozbalte jednotlivé položky pro detailní popis prvků produktu ${product.name}.`}
-          align="left"
-        />
+        <SectionHead eyebrow="Technika" title="Parametry a konstrukce" align="left" />
 
         <div className="pd-tech">
           <div className="pd-tech__visual">

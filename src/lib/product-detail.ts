@@ -2,7 +2,6 @@ import type {
   Product,
   ProductDesignOption,
   ProductDownload,
-  ProductGalleryImage,
   ProductGroup,
   ProductHotspot,
   ProductRelatedTopic,
@@ -38,7 +37,6 @@ export type ProductDetailView = {
   hotspots: ProductHotspot[];
   designOptions: ProductDesignOption[];
   downloads: ProductDownload[];
-  inspirationGallery: ProductGalleryImage[];
   relatedTopics: ProductRelatedTopic[];
   siblings: ProductSibling[];
 };
@@ -58,7 +56,7 @@ function buildHotspots(product: Product): ProductHotspot[] {
     x: HOTSPOT_LAYOUT[i].x,
     y: HOTSPOT_LAYOUT[i].y,
     title: spec.label,
-    text: `${spec.label}: ${spec.value}. Parametry ověřte při zaměření — rádi poradíme v showroomu nebo telefonicky.`,
+    text: `${spec.label}: ${spec.value}.`,
   }));
 }
 
@@ -84,49 +82,25 @@ function buildDesignOptions(
 
   const mounting: ProductDesignOption = {
     id: "mounting",
-    title: "Typ montáže",
-    description:
-      "Zabudování do fasády, předsazení nebo dodatečná montáž na stávající objekt — navrhneme podle stavby.",
+    title: "Montáž",
+    description: "Zabudování, předsazení nebo dodatečná montáž podle typu stavby.",
     image: product.image,
     href: "/poptavka",
   };
 
   const control: ProductDesignOption = {
     id: "control",
-    title: "Ovládání a automatika",
-    description:
-      "Manuální pásek, klika nebo motorické ovládání včetně napojení na chytrou domácnost.",
+    title: "Ovládání",
+    description: "Manuální ovládání, motor nebo napojení na chytrou domácnost.",
     image: product.image,
     href: "/poptavka",
   };
 
-  return [...siblings, mounting, control].slice(0, 4);
+  return [...siblings, mounting, control].slice(0, 3);
 }
 
 function buildDownloads(product: Product, _displayName: string): ProductDownload[] {
   return product.downloads?.length ? product.downloads : [];
-}
-
-function buildInspirationGallery(
-  product: Product,
-  group: ProductGroup,
-  _solution: Solution
-): ProductGalleryImage[] {
-  if (product.inspirationGallery?.length) return product.inspirationGallery;
-
-  const images: ProductGalleryImage[] = [];
-  const main = resolveProductImage(product, { groupSlug: group.slug, allowFallback: false });
-  if (main) images.push({ id: "main", image: main, caption: product.name });
-
-  const siblings = filterCatalogProducts(group.products).filter((p) => p.slug !== product.slug);
-  for (const sib of siblings.slice(0, 3)) {
-    const img = resolveProductImage(sib, { groupSlug: group.slug, allowFallback: false });
-    if (img) {
-      images.push({ id: `sib-${sib.slug}`, image: img, caption: sib.name });
-    }
-  }
-
-  return images.slice(0, 4);
 }
 
 function enrichRelatedTopicImages(topics: ProductRelatedTopic[]): ProductRelatedTopic[] {
@@ -155,32 +129,25 @@ function buildRelatedTopics(
 
   return [
     {
-      id: "showroom",
-      title: "Showroom Praha – Libuš",
-      description: "Prohlédněte si materiály, barvy a konstrukce naživo před rozhodnutím.",
-      href: "/showroom",
-      image: RELATED_TOPIC_IMAGES.showroom,
-    },
-    {
-      id: "servis",
-      title: "Servis a údržba",
-      description: "Záruční i pozáruční servis stínění včetně plánování výjezdů.",
-      href: "/servis",
-      image: RELATED_TOPIC_IMAGES.servis,
+      id: "poptavka",
+      title: "Nezávazná poptávka",
+      description: "Rozměry, typ objektu a termín — připravíme nabídku.",
+      href: `/poptavka?produkt=${encodeURIComponent(product.name)}`,
+      image: RELATED_TOPIC_IMAGES.poptavka,
     },
     {
       id: "group",
       title: group?.name ?? "Skupina produktů",
-      description: "Další modely ve stejné kategorii — porovnejte parametry a provedení.",
+      description: "Další modely ve stejné kategorii.",
       href: `/reseni/${solutionSlug}/${groupSlug}`,
       ...(isValidProductImage(groupImage) ? { image: groupImage } : {}),
     },
     {
-      id: "poptavka",
-      title: "Online poptávka",
-      description: `Zaměření, návrh a cenová nabídka pro ${shortProductName(product.name)}.`,
-      href: `/poptavka?produkt=${encodeURIComponent(product.name)}`,
-      image: RELATED_TOPIC_IMAGES.poptavka,
+      id: "servis",
+      title: "Servis",
+      description: "Seřízení, výměny dílů a následná péče.",
+      href: "/servis",
+      image: RELATED_TOPIC_IMAGES.servis,
     },
   ];
 }
@@ -202,7 +169,6 @@ export function buildProductDetailView(
     hotspots: buildHotspots(product),
     designOptions: buildDesignOptions(product, group, solution, solutionSlug, groupSlug),
     downloads: buildDownloads(product, displayName),
-    inspirationGallery: buildInspirationGallery(product, group, solution),
     relatedTopics: buildRelatedTopics(product, solution, solutionSlug, groupSlug),
     siblings: group.products.map((p) => ({
       slug: p.slug,

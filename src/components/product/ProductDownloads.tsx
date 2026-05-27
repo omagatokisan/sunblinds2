@@ -13,16 +13,12 @@ export function ProductDownloads({ downloads, productName, inquiryHref }: Props)
   const hasFiles = downloads.length > 0;
 
   return (
-    <section className="pd-section" id="ke-stazeni">
+    <section className="pd-section pd-section--soft" id="ke-stazeni">
       <div className="hd-shell">
         <SectionHead
           eyebrow="Dokumentace"
           title="Ke stažení"
-          lead={
-            hasFiles
-              ? "Technické listy a dokumenty k produktu — stáhněte si je nebo nás kontaktujte s dotazem."
-              : "Technické listy a certifikáty doplníme — mezitím vám je rádi zašleme na vyžádání."
-          }
+          lead={hasFiles ? undefined : "Technické listy doplníme nebo zašleme na vyžádání."}
           align="left"
         />
 
@@ -50,20 +46,12 @@ export function ProductDownloads({ downloads, productName, inquiryHref }: Props)
         ) : (
           <div className="pd-download-empty">
             <p className="font-display text-lg font-semibold text-ink">
-              Momentálně žádné soubory ke stažení
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
-              {productName
-                ? `Pro produkt ${productName} zatím nemáme veřejně dostupné PDF. Pošleme vám technický list nebo cenovou nabídku na míru.`
-                : "Veřejně dostupné soubory doplníme. Technický list nebo nabídku vám rádi zašleme na vyžádání."}
+              {productName ? `Dokumentace k ${productName}` : "Dokumentace k produktu"}
             </p>
             {inquiryHref ? (
-              <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+              <div className="mt-5">
                 <Button href={inquiryHref} className="hd-btn hd-btn--primary">
-                  Požádat o dokumentaci
-                </Button>
-                <Button href="/showroom" variant="secondary" className="hd-btn">
-                  Navštívit showroom
+                  Požádat o podklady
                 </Button>
               </div>
             ) : null}

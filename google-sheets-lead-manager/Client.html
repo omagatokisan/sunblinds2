@@ -1,0 +1,348 @@
+<script>
+(function () {
+  var state = {
+    leads: [],
+    selected: {},
+    statuses: [],
+    debounceTimer: null,
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function showToast(msg) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function () { t.classList.add('hidden'); }, 2800);
+  }
+
+  function getFilters() {
+    var hasEmail = document.querySelector('input[name="hasEmail"]:checked');
+    var hasWebsite = document.querySelector('input[name="hasWebsite"]:checked');
+    return {
+      globalSearch: $('fGlobal').value.trim(),
+      name: $('fName').value.trim(),
+      number: $('fNumber').value.trim(),
+      email: $('fEmail').value.trim(),
+      website: $('fWebsite').value.trim(),
+      description: $('fDescription').value.trim(),
+      status: $('fStatus').value,
+      sortBy: $('fSortBy').value,
+      sortDir: $('fSortDir').value,
+      hasEmail: hasEmail && hasEmail.value === 'yes' ? true : hasEmail && hasEmail.value === 'no' ? false : null,
+      hasWebsite: hasWebsite && hasWebsite.value === 'yes' ? true : hasWebsite && hasWebsite.value === 'no' ? false : null,
+      price: {
+        min: $('fPriceMin').value,
+        max: $('fPriceMax').value,
+        includeEmpty: $('fPriceEmpty').checked,
+      },
+    };
+  }
+
+  function setFiltersEmpty() {
+    ['fGlobal', 'fName', 'fNumber', 'fEmail', 'fWebsite', 'fDescription'].forEach(function (id) {
+      $(id).value = '';
+    });
+    $('fPriceMin').value = '';
+    $('fPriceMax').value = '';
+    $('fPriceEmpty').checked = false;
+    $('fStatus').value = '';
+    $('fSortBy').value = 'updated';
+    $('fSortDir').value = 'desc';
+    document.querySelector('input[name="hasEmail"][value=""]').checked = true;
+    document.querySelector('input[name="hasWebsite"][value=""]').checked = true;
+  }
+
+  function formatPrice(n) {
+    if (n == null || n === '' || isNaN(n)) return '—';
+    return Number(n).toLocaleString('cs-CZ') + ' Kč';
+  }
+
+  function badgeClass(status) {
+    return 'badge badge-' + String(status || 'new').toLowerCase().replace(/\s+/g, '-');
+  }
+
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s || '';
+    return d.innerHTML;
+  }
+
+  function renderStats(stats) {
+    $('statFiltered').textContent = stats.filtered;
+    $('statTotal').textContent = stats.total;
+    $('statPrice').textContent = Math.round(stats.priceSum).toLocaleString('cs-CZ');
+  }
+
+  function renderList(leads) {
+    state.leads = leads;
+    var list = $('leadList');
+    if (!leads.length) {
+      list.innerHTML = '<p class="empty">No leads match your filters.</p>';
+      updateBulkButtons();
+      return;
+    }
+    list.innerHTML = leads.map(function (l) {
+      var sel = state.selected[l.id] ? ' selected' : '';
+      return (
+        '<article class="card' + sel + '" data-id="' + escapeHtml(l.id) + '">' +
+          '<div class="card-head">' +
+            '<input type="checkbox" class="card-check" data-id="' + escapeHtml(l.id) + '"' +
+              (state.selected[l.id] ? ' checked' : '') + '>' +
+            '<div class="card-main">' +
+              '<div class="card-name">' + escapeHtml(l.name) +
+                '<span class="' + badgeClass(l.status) + '">' + escapeHtml(l.status) + '</span></div>' +
+              '<div class="card-meta">' +
+                (l.number ? escapeHtml(l.number) + ' · ' : '') +
+                '<span class="card-price">' + formatPrice(l.predictedPrice) + '</span>' +
+              '</div>' +
+              (l.email ? '<div class="card-meta">' + escapeHtml(l.email) + '</div>' : '') +
+              (l.website ? '<div class="card-meta">' + escapeHtml(l.website) + '</div>' : '') +
+              (l.description ? '<div class="card-desc">' + escapeHtml(l.description) + '</div>' : '') +
+              '<div class="card-actions">' +
+                '<button type="button" data-action="edit" data-id="' + escapeHtml(l.id) + '">Edit</button>' +
+                '<button type="button" data-action="sheet" data-id="' + escapeHtml(l.id) + '">Go to row</button>' +
+                (l.email ? '<button type="button" data-action="mailto" data-val="' + escapeHtml(l.email) + '">Email</button>' : '') +
+                (l.website ? '<button type="button" data-action="web" data-val="' + escapeHtml(l.website) + '">Web</button>' : '') +
+                (l.number ? '<button type="button" data-action="tel" data-val="' + escapeHtml(l.number) + '">Call</button>' : '') +
+                '<button type="button" class="danger" data-action="delete" data-id="' + escapeHtml(l.id) + '">Delete</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</article>'
+      );
+    }).join('');
+    updateBulkButtons();
+  }
+
+  function updateBulkButtons() {
+    var ids = Object.keys(state.selected).filter(function (k) { return state.selected[k]; });
+    var n = ids.length;
+    $('btnBulkDelete').disabled = n === 0;
+    $('btnBulkStatus').disabled = n === 0;
+    $('bulkStatus').disabled = n === 0;
+    var all = state.leads.length > 0 && state.leads.every(function (l) { return state.selected[l.id]; });
+    $('selectAll').checked = all && state.leads.length > 0;
+  }
+
+  function loadData() {
+    $('leadList').innerHTML = '<p class="empty">Loading…</p>';
+    google.script.run
+      .withSuccessHandler(function (res) {
+        renderStats(res.stats);
+        renderList(res.leads);
+      })
+      .withFailureHandler(onError)
+      .queryLeads(getFilters());
+  }
+
+  function onError(err) {
+    showToast('Error: ' + (err.message || err));
+    $('leadList').innerHTML = '<p class="empty">' + escapeHtml(String(err.message || err)) + '</p>';
+  }
+
+  function openModal(lead) {
+    lead = lead || {};
+    $('modalTitle').textContent = lead.id ? 'Edit lead' : 'New lead';
+    $('formId').value = lead.id || '';
+    $('formName').value = lead.name || '';
+    $('formNumber').value = lead.number || '';
+    $('formPrice').value = lead.predictedPrice != null ? lead.predictedPrice : '';
+    $('formEmail').value = lead.email || '';
+    $('formWebsite').value = lead.website || '';
+    $('formDescription').value = lead.description || '';
+    $('formStatus').value = lead.status || 'New';
+    $('formErrors').classList.add('hidden');
+    $('modal').classList.remove('hidden');
+    $('formName').focus();
+  }
+
+  function closeModal() {
+    $('modal').classList.add('hidden');
+    $('leadForm').reset();
+  }
+
+  function fillStatusSelects(statuses) {
+    state.statuses = statuses;
+    var opts = statuses.map(function (s) {
+      return '<option value="' + escapeHtml(s) + '">' + escapeHtml(s) + '</option>';
+    }).join('');
+    $('fStatus').innerHTML = '<option value="">All statuses</option>' + opts;
+    $('formStatus').innerHTML = opts;
+    $('bulkStatus').innerHTML = '<option value="">Bulk status…</option>' + opts;
+  }
+
+  function init() {
+    google.script.run
+      .withSuccessHandler(function (cfg) {
+        fillStatusSelects(cfg.statuses);
+        loadData();
+      })
+      .withFailureHandler(onError)
+      .getConfig();
+
+    $('filterToggle').addEventListener('click', function () {
+      $('filterPanel').classList.toggle('collapsed');
+      $('filterChevron').textContent = $('filterPanel').classList.contains('collapsed') ? '▶' : '▼';
+    });
+
+    $('btnApply').addEventListener('click', loadData);
+    $('btnRefresh').addEventListener('click', loadData);
+    $('btnClear').addEventListener('click', function () {
+      setFiltersEmpty();
+      loadData();
+    });
+
+    ['fGlobal', 'fName', 'fNumber', 'fEmail', 'fWebsite', 'fDescription'].forEach(function (id) {
+      $(id).addEventListener('input', function () {
+        clearTimeout(state.debounceTimer);
+        state.debounceTimer = setTimeout(loadData, 350);
+      });
+    });
+
+    ['fPriceMin', 'fPriceMax', 'fPriceEmpty', 'fStatus', 'fSortBy', 'fSortDir'].forEach(function (id) {
+      $(id).addEventListener('change', loadData);
+    });
+    document.querySelectorAll('input[name="hasEmail"], input[name="hasWebsite"]').forEach(function (el) {
+      el.addEventListener('change', loadData);
+    });
+
+    $('btnAdd').addEventListener('click', function () { openModal({}); });
+    $('modalClose').addEventListener('click', closeModal);
+    $('btnCancel').addEventListener('click', closeModal);
+    $('modalBackdrop').addEventListener('click', closeModal);
+
+    $('leadForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var lead = {
+        id: $('formId').value || null,
+        name: $('formName').value.trim(),
+        number: $('formNumber').value.trim(),
+        predictedPrice: $('formPrice').value === '' ? null : $('formPrice').value,
+        email: $('formEmail').value.trim(),
+        website: $('formWebsite').value.trim(),
+        description: $('formDescription').value.trim(),
+        status: $('formStatus').value,
+      };
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (!res.ok) {
+            $('formErrors').innerHTML = res.errors.map(escapeHtml).join('<br>');
+            $('formErrors').classList.remove('hidden');
+            return;
+          }
+          closeModal();
+          showToast('Saved');
+          loadData();
+        })
+        .withFailureHandler(onError)
+        .saveLead(lead);
+    });
+
+    $('leadList').addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-action]');
+      if (btn) {
+        var action = btn.getAttribute('data-action');
+        var id = btn.getAttribute('data-id');
+        var val = btn.getAttribute('data-val');
+        if (action === 'edit') {
+          var lead = state.leads.find(function (l) { return l.id === id; });
+          if (lead) openModal(lead);
+        } else if (action === 'delete') {
+          if (!confirm('Delete this lead?')) return;
+          google.script.run.withSuccessHandler(function () {
+            showToast('Deleted');
+            delete state.selected[id];
+            loadData();
+          }).withFailureHandler(onError).deleteLead(id);
+        } else if (action === 'sheet') {
+          google.script.run.withFailureHandler(onError).focusLeadInSheet(id);
+        } else if (action === 'mailto') {
+          window.open('mailto:' + val, '_blank');
+        } else if (action === 'web') {
+          var url = val.indexOf('http') === 0 ? val : 'https://' + val;
+          window.open(url, '_blank');
+        } else if (action === 'tel') {
+          window.open('tel:' + val.replace(/\s/g, ''), '_blank');
+        }
+        return;
+      }
+      var chk = e.target.closest('.card-check');
+      if (chk) {
+        var cid = chk.getAttribute('data-id');
+        state.selected[cid] = chk.checked;
+        chk.closest('.card').classList.toggle('selected', chk.checked);
+        updateBulkButtons();
+      }
+    });
+
+    $('selectAll').addEventListener('change', function () {
+      var on = $('selectAll').checked;
+      state.leads.forEach(function (l) { state.selected[l.id] = on; });
+      document.querySelectorAll('.card-check').forEach(function (c) {
+        c.checked = on;
+        c.closest('.card').classList.toggle('selected', on);
+      });
+      updateBulkButtons();
+    });
+
+    $('btnBulkDelete').addEventListener('click', function () {
+      var ids = Object.keys(state.selected).filter(function (k) { return state.selected[k]; });
+      if (!ids.length || !confirm('Delete ' + ids.length + ' lead(s)?')) return;
+      google.script.run.withSuccessHandler(function () {
+        showToast('Deleted ' + ids.length);
+        state.selected = {};
+        loadData();
+      }).withFailureHandler(onError).deleteLeads(ids);
+    });
+
+    $('btnBulkStatus').addEventListener('click', function () {
+      var status = $('bulkStatus').value;
+      var ids = Object.keys(state.selected).filter(function (k) { return state.selected[k]; });
+      if (!status || !ids.length) return;
+      google.script.run.withSuccessHandler(function () {
+        showToast('Status updated');
+        loadData();
+      }).withFailureHandler(onError).bulkUpdateStatus(ids, status);
+    });
+
+    $('btnExport').addEventListener('click', function () {
+      google.script.run
+        .withSuccessHandler(function (res) {
+          var blob = new Blob([res.csv], { type: 'text/csv;charset=utf-8' });
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = res.filename;
+          a.click();
+          showToast('Export downloaded');
+        })
+        .withFailureHandler(onError)
+        .exportLeadsCsv(getFilters());
+    });
+
+    $('fileImport').addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        var mode = confirm('Replace ALL data?\nOK = replace, Cancel = append only') ? 'replace' : 'append';
+        google.script.run
+          .withSuccessHandler(function (res) {
+            if (!res.ok) { showToast(res.errors.join(' ')); return; }
+            var msg = 'Imported: ' + res.imported;
+            if (res.skipped) msg += ', skipped: ' + res.skipped;
+            showToast(msg);
+            loadData();
+          })
+          .withFailureHandler(onError)
+          .importLeadsCsv(reader.result, mode);
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>

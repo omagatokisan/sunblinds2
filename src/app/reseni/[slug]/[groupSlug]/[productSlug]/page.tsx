@@ -5,7 +5,6 @@ import { ProductContentBlock } from "@/components/product/ProductContentBlock";
 import { ProductDesignCarousel } from "@/components/product/ProductDesignCarousel";
 import { ProductDetailHero } from "@/components/product/ProductDetailHero";
 import { ProductDownloads } from "@/components/product/ProductDownloads";
-import { ProductInspirationGallery } from "@/components/product/ProductInspirationGallery";
 import { ProductRelatedTopics } from "@/components/product/ProductRelatedTopics";
 import { ProductSectionNav } from "@/components/product/ProductSectionNav";
 import { ProductTechnicalOverview } from "@/components/product/ProductTechnicalOverview";
@@ -75,12 +74,11 @@ export default async function ProductPage({ params }: Props) {
         productName={product.name}
         inquiryHref={inquiryHref}
       />
-      <ProductInspirationGallery images={detail.inspirationGallery} productName={product.name} />
       <ProductRelatedTopics topics={detail.relatedTopics} />
 
       <CtaBand
-        title={`Zajímá vás ${detail.displayName}?`}
-        description="Napište typ stavby a rozměry — připravíme nezávaznou nabídku včetně montáže a servisu."
+        title={`Máte zájem o ${detail.displayName}?`}
+        description="Napište rozměry a typ objektu — připravíme nezávaznou nabídku."
       />
     </div>
   );
