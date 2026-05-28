@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { SectionHead } from "@/components/sections/SectionHead";
 
 export function CtaBand({
   title = "Nevíte, které řešení je pro váš dům?",
@@ -9,24 +9,19 @@ export function CtaBand({
   description?: string;
 }) {
   return (
-    <section className="hd-block hd-cta" aria-label="Výzva k akci">
-      <div className="hd-glow hd-glow--brand hd-cta__glow" aria-hidden />
-      <div className="hd-shell hd-cta__inner">
-        <div>
-          <p className="hd-eyebrow hd-eyebrow--light">
-            <span className="hd-eyebrow__mark" aria-hidden />
-            Další krok
-          </p>
-          <h2 className="hd-cta__title">{title}</h2>
-          <p className="hd-cta__lead">{description}</p>
-        </div>
-        <div className="hd-cta__actions">
-          <Button href="/poptavka" size="lg" className="hd-btn hd-btn--light">
-            Nezávazná poptávka
-          </Button>
-          <Link href="/kontakt" className="hd-cta__phone">
-            Kontakt a telefon →
-          </Link>
+    <section className="hd-block hd-page-cta" aria-label="Výzva k akci">
+      <div className="hd-page-cta__mesh" aria-hidden />
+      <div className="hd-shell hd-page-cta__shell">
+        <div className="hd-page-cta__grid">
+          <SectionHead eyebrow="Další krok" title={title} lead={description} align="left" />
+          <div className="hd-page-cta__actions">
+            <Link href="/poptavka" className="hd-btn hd-btn--primary">
+              Nezávazná poptávka
+            </Link>
+            <Link href="/kontakt" className="hd-link">
+              Kontakt a telefon →
+            </Link>
+          </div>
         </div>
       </div>
     </section>

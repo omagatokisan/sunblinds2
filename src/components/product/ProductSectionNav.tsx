@@ -29,6 +29,7 @@ export function ProductSectionNav() {
     if (!visible.length) return;
 
     const elements = visible.map((s) => document.getElementById(s.id)).filter(Boolean);
+    const mobile = window.matchMedia("(max-width: 639px)").matches;
     const observer = new IntersectionObserver(
       (entries) => {
         const hit = entries
@@ -36,7 +37,10 @@ export function ProductSectionNav() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (hit[0]?.target.id) setActive(hit[0].target.id);
       },
-      { rootMargin: "-28% 0px -55% 0px", threshold: [0, 0.15, 0.35] }
+      {
+        rootMargin: mobile ? "-18% 0px -62% 0px" : "-28% 0px -55% 0px",
+        threshold: [0, 0.15, 0.35],
+      }
     );
 
     elements.forEach((el) => observer.observe(el!));

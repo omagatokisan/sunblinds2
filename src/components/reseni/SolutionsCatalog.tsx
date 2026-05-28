@@ -5,33 +5,40 @@ import { IMG_QUALITY, imgClass, imgSizes } from "@/lib/image-presets";
 
 export function SolutionsCatalog({ solutions }: { solutions: Solution[] }) {
   return (
-    <div className="catalog-grid catalog-grid--cols-3">
-      {solutions.map((solution) => {
-        const count = solution.productGroups.reduce((n, g) => n + g.products.length, 0);
+    <ul className="hd-solutions__grid">
+      {solutions.map((solution, index) => {
+        const count = solution.productGroups.reduce(
+          (total, group) => total + group.products.length,
+          0
+        );
+
         return (
-          <Link
-            key={solution.slug}
-            href={`/reseni/${solution.slug}`}
-            className="catalog-cell group"
-          >
-            <div className="catalog-cell-media catalog-cell-media--wide">
-              <Image
-                src={solution.heroImage}
-                alt={solution.title}
-                fill
-                quality={IMG_QUALITY}
-                className={imgClass.photo}
-                sizes={imgSizes.catalogThird}
-              />
-            </div>
-            <div className="catalog-cell-body">
-              <h2 className="catalog-cell-title">{solution.title}</h2>
-              <p className="catalog-cell-summary">{solution.summary}</p>
-              <p className="mt-3 text-xs text-muted">{count} produktů</p>
-            </div>
-          </Link>
+          <li key={solution.slug}>
+            <Link href={`/reseni/${solution.slug}`} className="hd-solution-card">
+              <div className="hd-solution-card__media">
+                <Image
+                  src={solution.heroImage}
+                  alt=""
+                  fill
+                  quality={IMG_QUALITY}
+                  className={imgClass.photo}
+                  sizes={imgSizes.catalogThird}
+                />
+                <div className="hd-solution-card__shade" aria-hidden />
+              </div>
+              <div className="hd-solution-card__copy">
+                <span className="hd-solution-card__index">{String(index + 1).padStart(2, "0")}</span>
+                <h2 className="hd-solution-card__title">{solution.title}</h2>
+                <p className="hd-solution-card__summary">{solution.summary}</p>
+                <p className="hd-solution-card__meta">{count} produktů</p>
+                <span className="hd-solution-card__arrow" aria-hidden>
+                  →
+                </span>
+              </div>
+            </Link>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }

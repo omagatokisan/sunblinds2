@@ -3,10 +3,8 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PageSection } from "@/components/layout/PageSection";
-import { PageToolbar } from "@/components/layout/PageToolbar";
 import { CtaBand } from "@/components/sections/CtaBand";
-import { GroupProductMosaic } from "@/components/reseni/GroupProductMosaic";
-import { Button } from "@/components/ui/Button";
+import { UniformProductCatalog } from "@/components/reseni/UniformProductCatalog";
 import { getProductGroup, getSolutions } from "@/lib/content";
 
 type Props = { params: Promise<{ slug: string; groupSlug: string }> };
@@ -32,23 +30,26 @@ export default async function ProductGroupPage({ params }: Props) {
 
   return (
     <>
-      <PageToolbar>
-        <div className="page-toolbar-actions">
-          <Button href="/poptavka">Poptat tuto kategorii</Button>
+      <PageSection className="page-section--flush">
+        <div className="hd-subpage-catalog">
+          <div className="hd-subpage-catalog__mesh" aria-hidden />
+          <Container width="wide" className="hd-shell reseni-page">
+            <SectionHeading
+              eyebrow={solution.title}
+              title={group.name}
+              description={group.summary}
+              align="left"
+            />
+            <div className="solution-catalog-wrap">
+              <UniformProductCatalog
+                solution={solution}
+                group={group}
+                layout="category"
+                nameFormat="category"
+              />
+            </div>
+          </Container>
         </div>
-      </PageToolbar>
-
-      <PageSection>
-        <Container width="wide" className="reseni-page">
-          <SectionHeading
-            title={group.name}
-            description={group.summary}
-            align="center"
-          />
-          <div className="mt-10 w-full">
-            <GroupProductMosaic solution={solution} group={group} />
-          </div>
-        </Container>
       </PageSection>
 
       <CtaBand title={`Potřebujete poradit s výběrem — ${group.name}?`} />

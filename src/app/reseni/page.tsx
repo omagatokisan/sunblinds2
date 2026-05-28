@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PageSection } from "@/components/layout/PageSection";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { SolutionsCatalog } from "@/components/reseni/SolutionsCatalog";
@@ -16,10 +17,21 @@ export default async function SolutionsHubPage() {
 
   return (
     <>
-      <PageSection>
-        <Container width="wide" className="reseni-page">
-          <SolutionsCatalog solutions={solutions} />
-        </Container>
+      <PageSection className="page-section--flush">
+        <div className="hd-subpage-catalog">
+          <div className="hd-subpage-catalog__mesh" aria-hidden />
+          <Container width="wide" className="hd-shell reseni-page">
+            <SectionHeading
+              eyebrow="Katalog"
+              title="Všechny oblasti"
+              description="Vyberte oblast podle projektu — u každé najdete produkty s parametry montáže."
+              align="left"
+            />
+            <div className="solution-catalog-wrap">
+              <SolutionsCatalog solutions={solutions} />
+            </div>
+          </Container>
+        </div>
       </PageSection>
 
       <CtaBand />

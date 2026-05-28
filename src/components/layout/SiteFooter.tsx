@@ -7,7 +7,6 @@ import { SunBlindsLogo } from "@/components/layout/SunBlindsLogo";
 import { company } from "@/data/company";
 import type { Solution } from "@/lib/cms/types";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 
 const COMPANY_LINKS = [
   { href: "/o-nas", label: "O nás" },
@@ -24,22 +23,6 @@ export function SiteFooter({ solutions }: { solutions: Solution[] }) {
 
   return (
     <footer className="site-footer">
-      {pathname !== "/" ? (
-        <div className="site-footer__cta-band">
-          <Container className="site-footer__cta-inner" width="wide">
-            <div>
-              <p className="site-footer__cta-title">Připravíme návrh stínění na míru</p>
-              <p className="site-footer__cta-lead">
-                Zaměření, výběr systému i montáž — jeden tým od první konzultace po servis.
-              </p>
-            </div>
-            <Button href="/poptavka" variant="outline-light" size="lg">
-              Nezávazná poptávka
-            </Button>
-          </Container>
-        </div>
-      ) : null}
-
       <Container className="site-footer__main" width="wide">
         <div className="site-footer__brand">
           <SunBlindsLogo variant="full" />
