@@ -8,11 +8,13 @@ export function Field({
   value,
   onChange,
   multiline,
+  maxLength,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   multiline?: boolean;
+  maxLength?: number;
 }) {
   return (
     <label className="block text-sm">
@@ -21,16 +23,23 @@ export function Field({
         <textarea
           value={value}
           rows={3}
+          maxLength={maxLength}
           onChange={(e) => onChange(e.target.value)}
           className="mt-1 w-full rounded-lg border border-line px-3 py-2"
         />
       ) : (
         <input
           value={value}
+          maxLength={maxLength}
           onChange={(e) => onChange(e.target.value)}
           className="mt-1 w-full rounded-lg border border-line px-3 py-2"
         />
       )}
+      {maxLength ? (
+        <span className="mt-1 block text-right text-xs text-muted">
+          {value.length} / {maxLength}
+        </span>
+      ) : null}
     </label>
   );
 }

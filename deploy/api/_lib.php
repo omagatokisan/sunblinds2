@@ -38,9 +38,9 @@ function sb_send_mail(string $subject, string $body): bool {
 }
 
 function sb_cors(): void {
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type');
+  header('Access-Control-Allow-Origin: *');
+  header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+  header('Access-Control-Allow-Headers: Content-Type');
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         http_response_code(204);
         exit;
@@ -63,4 +63,44 @@ function sb_str($value, int $max): string {
 function sb_email($value): string {
     $s = sb_str($value, 120);
     return filter_var($s, FILTER_VALIDATE_EMAIL) ? $s : '';
+}
+
+function sb_reviews_path(): string {
+    return dirname(__DIR__) . '/data/reviews.json';
+}
+
+function sb_read_reviews_store(): array {
+    $path = sb_reviews_path();
+    if (!is_file($path)) {
+        return ['version' => 1, 'enabled' => true, 'reviews' => []];
+    }
+    $raw = file_get_contents($path);
+    $data = json_decode($raw ?: '', true);
+    if (!is_array($data)) {
+        return ['version' => 1, 'enabled' => true, 'reviews' => []];
+    }
+    if (!isset($data['reviews']) || !is_array($data['reviews'])) {
+        $data['reviews'] = [];
+    }
+    if (!isset($data['enabled'])) {
+        $data['enabled'] = true;
+    }
+    if (!isset($data['version'])) {
+        $data['version'] = 1;
+    }
+    return $data;
+}
+
+function sb_write_reviews_store(array $store): bool {
+    $path = sb_reviews_path();
+    $dir = dirname($path);
+    if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+        return false;
+    }
+    $tmp = $path . '.tmp';
+    $json = json_encode($store, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    if ($json === false || file_put_contents($tmp, $json) === false) {
+        return false;
+    }
+    return rename($tmp, $path);
 }

@@ -12,7 +12,6 @@ const COMPANY_LINKS = [
   { href: "/o-nas", label: "O nás" },
   { href: "/showroom", label: "Showroom" },
   { href: "/servis", label: "Servis" },
-  { href: "/recenze", label: "Recenze" },
   { href: "/poptavka", label: "Poptávka" },
   { href: "/kontakt", label: "Kontakt" },
 ];

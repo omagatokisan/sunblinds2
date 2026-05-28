@@ -73,12 +73,14 @@ export function searchIndex(hits: SearchHit[], query: string, limit = 12) {
   const q = query.trim().toLowerCase();
   if (q.length < 2) return { pages: [] as SearchPageHit[], products: [] as SearchProductHit[] };
 
+  const terms = q.split(/\s+/).filter(Boolean);
+
   const scored = hits
     .map((hit) => {
       const hay = `${hit.title} ${hit.excerpt} ${hit.type === "product" ? hit.category : ""}`.toLowerCase();
-      const idx = hay.indexOf(q);
-      if (idx === -1) return null;
-      return { hit, score: idx === 0 ? 0 : idx };
+      if (!terms.every((term) => hay.includes(term))) return null;
+      const score = hay.indexOf(terms[0]);
+      return { hit, score: score === -1 ? 999 : score };
     })
     .filter(Boolean) as { hit: SearchHit; score: number }[];
 

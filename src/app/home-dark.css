@@ -529,6 +529,65 @@
   transform: translateX(4px);
 }
 
+.hd-solution-card__media--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--hd-bg) 88%, var(--hd-brand) 12%) 0%,
+    color-mix(in srgb, var(--hd-bg-raised) 92%, var(--hd-brand-soft) 8%) 100%
+  );
+}
+
+.hd-solution-card__icon-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--hd-brand-soft) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--hd-brand-soft) 16%, transparent) 1px, transparent 1px);
+  background-size: clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 1.75rem);
+  mask-image: radial-gradient(circle at 50% 42%, #000 18%, transparent 72%);
+}
+
+.hd-solution-card__icon-frame {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(4.25rem, 13vw, 5.75rem);
+  height: clamp(4.25rem, 13vw, 5.75rem);
+  color: var(--hd-brand-soft);
+  background: color-mix(in srgb, var(--hd-bg) 72%, var(--hd-brand) 10%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--hd-brand-soft) 42%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--hd-brand) 18%, transparent);
+}
+
+.hd-solution-card__icon-frame svg {
+  width: 54%;
+  height: 54%;
+}
+
+.hd-solution-card--icon .hd-solution-card__shade {
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, #000 86%, transparent) 0%,
+    color-mix(in srgb, #000 28%, transparent) 52%,
+    transparent 100%
+  );
+}
+
+.hd-solution-card--icon:hover .hd-solution-card__icon-frame {
+  color: color-mix(in srgb, var(--hd-brand-soft) 88%, white 12%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--hd-brand-soft) 58%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--hd-brand) 28%, transparent),
+    0 0 24px color-mix(in srgb, var(--hd-brand) 22%, transparent);
+}
+
 /* —— Featured systems —— */
 .hd-featured {
   background: var(--hd-bg-soft);
@@ -950,6 +1009,10 @@
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.hd-reviews__actions {
+  margin-top: clamp(2rem, 4vw, 3rem);
 }
 
 .hd-reviews__grid {

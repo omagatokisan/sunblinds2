@@ -33,7 +33,7 @@ export default async function ServicePage() {
         <p className="label-caps label-caps--plain">Servisujeme</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {servisPage.servicedTags.map((tag) => (
-            <span key={tag} className="border border-line bg-surface px-3 py-1.5 text-sm text-ink">
+            <span key={tag} className="hd-tag">
               {tag}
             </span>
           ))}
@@ -55,7 +55,7 @@ export default async function ServicePage() {
 
       <SubpageContent>
         <p className="label-caps label-caps--plain">Servisní technici</p>
-        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+        <div className="mt-6 subpage-card-grid subpage-card-grid--2">
           {technicians.map((t) => (
             <TechnicianCard key={t.id} technician={t} />
           ))}

@@ -10,7 +10,7 @@ import { company } from "@/data/company";
 import type { Solution } from "@/lib/cms/types";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { GlobalSearch } from "@/components/search/GlobalSearch";
+import { GlobalSearch, type GlobalSearchHandle } from "@/components/search/GlobalSearch";
 import { IMG_QUALITY, imgClass, imgSizes } from "@/lib/image-presets";
 
 type StripItem = { href: string; label: string; image: string; description?: string };
@@ -205,6 +205,7 @@ export function SiteHeader({ solutions }: { solutions: Solution[] }) {
 function HeaderSearchInline({ compact, onOpen }: { compact?: boolean; onOpen?: () => void }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<GlobalSearchHandle>(null);
 
   useEffect(() => {
     function onDoc(e: MouseEvent) {
@@ -230,6 +231,7 @@ function HeaderSearchInline({ compact, onOpen }: { compact?: boolean; onOpen?: (
     >
       <div className="header-search-inline__field">
         <GlobalSearch
+          ref={searchRef}
           variant="header"
           placeholder="Hledat…"
           className="header-search-inline__input"
@@ -242,7 +244,8 @@ function HeaderSearchInline({ compact, onOpen }: { compact?: boolean; onOpen?: (
         aria-label="Hledat"
         onClick={() => {
           onOpen?.();
-          if (compact) setOpen((v) => !v);
+          setOpen(true);
+          searchRef.current?.focus();
         }}
       >
         <SearchIcon />

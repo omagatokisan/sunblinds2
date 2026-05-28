@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "enabled": true,
+  "reviews": [
+    {
+      "id": "rev-sample-01",
+      "author": "Jana M.",
+      "rating": 5,
+      "text": "Profesionální přístup od zaměření po montáž venkovních rolet. Technici byli pečliví a vše sladili s barvou fasády.",
+      "location": "Praha 6",
+      "productHint": "Venkovní rolety",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-11-12"
+    },
+    {
+      "id": "rev-sample-02",
+      "author": "Tomáš K.",
+      "rating": 5,
+      "text": "Rychlý servis u interiérových žaluzií — druhý den po nahlášení. Doporučuji.",
+      "location": "Říčany",
+      "productHint": "Interiérové stínění",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2026-01-08"
+    },
+    {
+      "id": "rev-sample-03",
+      "author": "Petra S.",
+      "rating": 4,
+      "text": "Showroom nám pomohl vybrat látky na místě. Montáž proběhla v dohodnutém termínu.",
+      "location": "Praha-Libuš",
+      "productHint": "Textilní roletky",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2026-03-02"
+    },
+    {
+      "id": "rev-sample-04",
+      "author": "Martin H.",
+      "rating": 5,
+      "text": "Venkovní žaluzie na terase drží i při větru. Montáž trvala jeden den, bez nepořádku.",
+      "location": "Praha 4",
+      "productHint": "Venkovní žaluzie",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-09-18"
+    },
+    {
+      "id": "rev-sample-05",
+      "author": "Lucie V.",
+      "rating": 5,
+      "text": "Screenové rolety výrazně snížily přehřívání obýváku. Ovládání přes aplikaci funguje spolehlivě.",
+      "location": "Brno",
+      "productHint": "Screenové rolety",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-12-04"
+    },
+    {
+      "id": "rev-sample-06",
+      "author": "Pavel D.",
+      "rating": 5,
+      "text": "Markýza nad terasou je pevná a esteticky sladěná s fasádou. Domluva i montáž bez komplikací.",
+      "location": "Kolín",
+      "productHint": "Markýzy",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2026-02-14"
+    },
+    {
+      "id": "rev-sample-07",
+      "author": "Eva R.",
+      "rating": 5,
+      "text": "Servisní technik vyměnil poškozené lanko u rolet během jedné návštěvy. Férová cena i komunikace.",
+      "location": "Kladno",
+      "productHint": "Servis rolet",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-10-22"
+    },
+    {
+      "id": "rev-sample-08",
+      "author": "Ondřej N.",
+      "rating": 5,
+      "text": "Parapetní systém na oknech vypadá velmi čistě. Zaměření i montáž proběhly v jednom týdnu.",
+      "location": "Mělník",
+      "productHint": "Parapetní systémy",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-08-30"
+    },
+    {
+      "id": "rev-sample-09",
+      "author": "Kateřina F.",
+      "rating": 5,
+      "text": "Plisé do ložnice přesně na míru. Látka i barva odpovídají tomu, co jsme viděli ve showroomu.",
+      "location": "Praha 9",
+      "productHint": "Plisé",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2026-04-01"
+    },
+    {
+      "id": "rev-sample-10",
+      "author": "David L.",
+      "rating": 5,
+      "text": "Bioklimatická pergola překvapila kvalitou zpracování. Stínění terasy teď využíváme od jara do podzimu.",
+      "location": "Beroun",
+      "productHint": "Bioklimatická pergola",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-07-11"
+    },
+    {
+      "id": "rev-sample-11",
+      "author": "Hana Z.",
+      "rating": 5,
+      "text": "Motorické venkovní rolety na chalupě šetří čas i energii. Instalace proběhla bez zdržení.",
+      "location": "Praha 10",
+      "productHint": "Venkovní rolety",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-06-05"
+    },
+    {
+      "id": "rev-sample-12",
+      "author": "Michal S.",
+      "rating": 4,
+      "text": "Interiérové rolety v celém patře domu. Drobné seřízení po montáži vyřešili hned na místě.",
+      "location": "Úvaly",
+      "productHint": "Interiérové rolety",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2026-01-27"
+    },
+    {
+      "id": "rev-sample-13",
+      "author": "Alena T.",
+      "rating": 5,
+      "text": "Vertikální žaluzie do kanceláře tlumí odlesky na monitoru. Montáž proběhla o víkendu dle domluvy.",
+      "location": "České Budějovice",
+      "productHint": "Vertikální žaluzie",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-11-28"
+    },
+    {
+      "id": "rev-sample-14",
+      "author": "Filip B.",
+      "rating": 5,
+      "text": "Návštěva showroomu v Libuši nám ušetřila spoustu času. Poradili s materiálem i barvou profilů.",
+      "location": "Praha 5",
+      "productHint": "Showroom",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-05-19"
+    },
+    {
+      "id": "rev-sample-15",
+      "author": "Monika J.",
+      "rating": 5,
+      "text": "Kompletní stínění rodinného domu — venku i uvnitř. Jeden dodavatel, jeden harmonogram, bez stresu.",
+      "location": "Říčany",
+      "productHint": "Kompletní stínění",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-12-20"
+    },
+    {
+      "id": "rev-sample-16",
+      "author": "Roman K.",
+      "rating": 4,
+      "text": "Venkovní rolety fungují skvěle, jen montáž se posunula o tři dny kvůli počasí. Jinak spokojenost.",
+      "location": "Olomouc",
+      "productHint": "Venkovní rolety",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2026-02-03"
+    },
+    {
+      "id": "rev-sample-17",
+      "author": "Veronika P.",
+      "rating": 5,
+      "text": "Textilní roletky v dětském pokoji jsou tiše a bezpečné. Děti si vybraly barvu přímo ve vzorkovníku.",
+      "location": "Praha-Libuš",
+      "productHint": "Textilní roletky",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-10-08"
+    },
+    {
+      "id": "rev-sample-18",
+      "author": "Jakub W.",
+      "rating": 5,
+      "text": "Po servisní prohlídce rolety zase jezdí hladce. Technik vše vysvětlil a nechal prostor čistý.",
+      "location": "Nymburk",
+      "productHint": "Servis",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2026-03-15"
+    },
+    {
+      "id": "rev-sample-19",
+      "author": "Simona G.",
+      "rating": 5,
+      "text": "Venkovní screeny na jižní straně domu drží teplotu v obýváku příjemnou i v létě. Doporučuji.",
+      "location": "Praha 2",
+      "productHint": "Venkovní screeny",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-09-02"
+    },
+    {
+      "id": "rev-sample-20",
+      "author": "Ladislav C.",
+      "rating": 5,
+      "text": "Zaměření, výroba i montáž venkovních rolet proběhly podle plánu. Férová nabídka bez skrytých položek.",
+      "location": "Praha 8",
+      "productHint": "Venkovní rolety",
+      "source": "manual",
+      "status": "approved",
+      "createdAt": "2025-04-24"
+    }
+  ]
+}

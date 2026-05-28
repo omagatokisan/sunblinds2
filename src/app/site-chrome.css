@@ -642,9 +642,11 @@
 }
 
 .header-search-inline__field {
+  position: relative;
+  z-index: 2;
   width: 0;
   opacity: 0;
-  overflow: hidden;
+  overflow: visible;
   pointer-events: none;
   transition:
     width 0.38s var(--ease-out-expo),
@@ -718,7 +720,7 @@
   min-width: 17rem;
   transform: none;
   animation: header-drop-in 0.3s var(--ease-out-expo) forwards;
-  z-index: 90;
+  z-index: 120;
 }
 
 .header-search-inline__trigger {

@@ -102,26 +102,8 @@ export const HEADER_NAV: HeaderNavItem[] = [
     id: "o-nas",
     href: "/o-nas",
     label: "O nás",
-    match: (p) =>
-      p.startsWith("/o-nas") || p.startsWith("/recenze") || p.startsWith("/ochrana-osobnich-udaju"),
+    match: (p) => p.startsWith("/o-nas"),
     intro: `${company.name} — ${company.tagline}`,
-    items: [
-      {
-        href: "/o-nas",
-        label: "O společnosti",
-        description: "Kdo jsme a jak pracujeme",
-      },
-      {
-        href: "/recenze",
-        label: "Recenze zákazníků",
-        description: "Hodnocení z reálných zakázek",
-      },
-      {
-        href: "/ochrana-osobnich-udaju",
-        label: "Ochrana údajů",
-        description: "Zásady zpracování osobních údajů",
-      },
-    ],
   },
 ];
 

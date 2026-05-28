@@ -1,4 +1,5 @@
 import catalogJson from "./catalog.generated.json";
+import { SAMPLE_REVIEWS } from "./sample-reviews";
 import type { ProductGroup, SiteContent, Solution } from "./types";
 import { newId } from "./types";
 
@@ -268,41 +269,7 @@ export const defaultContent: SiteContent = {
       { id: newId("pr"), service: "Výjezd mimo perimetr (Praha + 20 km)", price: "8 Kč / km", note: "Za každý km nad rámec perimetru" },
     ],
   },
-  reviews: [
-    {
-      id: newId("rev"),
-      author: "Jana M.",
-      rating: 5,
-      text: "Profesionální přístup od zaměření po montáž venkovních rolet. Technici byli pečliví a vše sladili s barvou fasády.",
-      location: "Praha 6",
-      productHint: "Venkovní rolety",
-      source: "manual",
-      status: "approved",
-      createdAt: "2025-11-12",
-    },
-    {
-      id: newId("rev"),
-      author: "Tomáš K.",
-      rating: 5,
-      text: "Rychlý servis u interiérových žaluzií — druhý den po nahlášení. Doporučuji.",
-      location: "Říčany",
-      productHint: "Interiérové stínění",
-      source: "manual",
-      status: "approved",
-      createdAt: "2026-01-08",
-    },
-    {
-      id: newId("rev"),
-      author: "Petra S.",
-      rating: 4,
-      text: "Showroom nám pomohl vybrat látky na místě. Montáž proběhla v dohodnutém termínu.",
-      location: "Praha-Libuš",
-      productHint: "Textilní roletky",
-      source: "manual",
-      status: "approved",
-      createdAt: "2026-03-02",
-    },
-  ],
+  reviews: SAMPLE_REVIEWS,
   departments: [
     {
       id: "servis",

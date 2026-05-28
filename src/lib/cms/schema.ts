@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { REVIEW_TEXT_MAX } from "@/lib/reviews/constants";
 
 const textBlockSchema = z.object({
   id: z.string().min(1).max(80),
@@ -187,7 +188,7 @@ export const siteContentSchema = z.object({
         id: z.string(),
         author: z.string().max(120),
         rating: z.number().int().min(1).max(5),
-        text: z.string().max(2000),
+        text: z.string().max(REVIEW_TEXT_MAX),
         location: z.string().max(120).optional(),
         productHint: z.string().max(200).optional(),
         source: z.enum(["customer", "manual"]),

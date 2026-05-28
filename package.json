@@ -4,8 +4,8 @@
   "private": false,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/generate-search-index.mjs && node scripts/ensure-reviews-store.mjs && next dev",
+    "build": "node scripts/generate-search-index.mjs && node scripts/ensure-reviews-store.mjs && next build",
     "build:ftp": "node scripts/build-ftp-deploy.mjs",
     "start": "next start",
     "lint": "next lint",

@@ -7,16 +7,18 @@ export function GdprConsentField({
   consent,
   checked,
   onChange,
+  required = true,
 }: {
   consent: GdprConsent;
   checked: boolean;
   onChange: (v: boolean) => void;
+  required?: boolean;
 }) {
   return (
-    <label className="flex gap-3 rounded-xl border border-line bg-surface p-4 text-sm leading-relaxed text-muted">
+    <label className="hd-form-consent flex gap-3 p-4 text-sm leading-relaxed text-muted">
       <input
         type="checkbox"
-        required
+        required={required}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         className="mt-1 h-4 w-4 shrink-0 accent-brand"

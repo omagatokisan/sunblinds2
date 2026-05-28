@@ -3,6 +3,7 @@ import path from "node:path";
 import { defaultContent } from "./default-content";
 import type { SiteContent } from "./types";
 import { siteContentSchema } from "./schema";
+import { getReviewsStore, saveReviewsStore } from "./reviews-store";
 
 const cmsDir = path.join(process.cwd(), "data", "cms");
 const contentPath = path.join(cmsDir, "content.json");
@@ -84,7 +85,14 @@ export async function getContent(): Promise<SiteContent> {
       ? (parsed as Partial<SiteContent>).references
       : defaultContent.references,
   });
-  if (result.success) return result.data;
+  if (result.success) {
+    const reviewsStore = await getReviewsStore();
+    return {
+      ...result.data,
+      reviewsEnabled: reviewsStore.enabled,
+      reviews: reviewsStore.reviews,
+    };
+  }
   await writeFile(contentPath, JSON.stringify(defaultContent, null, 2), "utf8");
   return defaultContent;
 }
@@ -92,6 +100,11 @@ export async function getContent(): Promise<SiteContent> {
 export async function saveContent(content: SiteContent) {
   const parsed = siteContentSchema.parse(content);
   await ensureCmsFiles();
+  await saveReviewsStore({
+    version: 1,
+    enabled: parsed.reviewsEnabled,
+    reviews: parsed.reviews,
+  });
   const tmp = `${contentPath}.tmp`;
   await writeFile(tmp, JSON.stringify(parsed, null, 2), "utf8");
   await copyFile(tmp, contentPath);

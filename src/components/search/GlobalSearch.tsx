@@ -2,7 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useId,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import type { SearchPageHit, SearchProductHit } from "@/lib/search-index";
 import { searchIndex, type SearchHit } from "@/lib/search-index";
 import { isStaticHosting } from "@/lib/static-hosting";
@@ -15,21 +23,34 @@ type Props = {
   className?: string;
 };
 
-export function GlobalSearch({
-  variant = "compact",
-  placeholder = "Hledat produkty a stránky…",
-  className = "",
-}: Props) {
+export type GlobalSearchHandle = {
+  focus: () => void;
+};
+
+export const GlobalSearch = forwardRef<GlobalSearchHandle, Props>(function GlobalSearch(
+  { variant = "compact", placeholder = "Hledat produkty a stránky…", className = "" },
+  ref
+) {
   const listId = useId();
   const wrapRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [pages, setPages] = useState<SearchPageHit[]>([]);
   const [products, setProducts] = useState<SearchProductHit[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
   const staticIndexRef = useRef<SearchHit[] | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      setOpen(true);
+      window.requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    },
+  }));
 
   const flatResults = [
     ...pages.map((p) => ({ kind: "page" as const, hit: p })),
@@ -40,14 +61,16 @@ export function GlobalSearch({
     if (q.trim().length < 2) {
       setPages([]);
       setProducts([]);
+      setError("");
       return;
     }
     setLoading(true);
+    setError("");
     try {
       if (isStaticHosting()) {
         if (!staticIndexRef.current) {
           const res = await fetch("/search-index.json");
-          if (!res.ok) throw new Error("search index");
+          if (!res.ok) throw new Error("Chybí soubor search-index.json");
           staticIndexRef.current = (await res.json()) as SearchHit[];
         }
         const result = searchIndex(staticIndexRef.current, q.trim());
@@ -55,18 +78,26 @@ export function GlobalSearch({
         setProducts(result.products);
         return;
       }
+
       const res = await fetch(`/api/search?q=${encodeURIComponent(q.trim())}`);
+      if (!res.ok) throw new Error("Vyhledávání není dostupné");
       const data = (await res.json()) as { pages: SearchPageHit[]; products: SearchProductHit[] };
-      setPages(data.pages);
-      setProducts(data.products);
+      setPages(data.pages ?? []);
+      setProducts(data.products ?? []);
+    } catch (err) {
+      setPages([]);
+      setProducts([]);
+      setError(err instanceof Error ? err.message : "Vyhledávání selhalo");
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => fetchResults(query), 200);
-    return () => clearTimeout(t);
+    const t = window.setTimeout(() => {
+      void fetchResults(query);
+    }, 200);
+    return () => window.clearTimeout(t);
   }, [query, fetchResults]);
 
   useEffect(() => {
@@ -134,6 +165,7 @@ export function GlobalSearch({
               window.location.href = flatResults[activeIndex].hit.href;
             } else if (e.key === "Escape") {
               setOpen(false);
+              inputRef.current?.blur();
             }
           }}
           placeholder={placeholder}
@@ -171,6 +203,8 @@ export function GlobalSearch({
         >
           {loading ? (
             <p className="search-panel__empty">Hledám…</p>
+          ) : error ? (
+            <p className="search-panel__empty">{error}</p>
           ) : !hasResults ? (
             <p className="search-panel__empty">Nic nenalezeno pro „{query}"</p>
           ) : (
@@ -255,4 +289,4 @@ export function GlobalSearch({
       ) : null}
     </div>
   );
-}
+});

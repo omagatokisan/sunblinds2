@@ -174,6 +174,9 @@ async function main() {
     "utf8"
   );
 
+  console.log("→ Synchronizuji reviews.json …");
+  run("node", ["scripts/ensure-reviews-store.mjs"]);
+
   console.log("→ Připravuji PHP config …");
   await writePhpConfig();
 
@@ -203,6 +206,11 @@ async function main() {
   console.log("→ Kopíruji .htaccess, PHP, sitemap, robots …");
   await copyFile(path.join(deployDir, ".htaccess"), path.join(outDir, ".htaccess"));
   await cp(path.join(deployDir, "api"), path.join(outDir, "api"), { recursive: true });
+  await cp(path.join(deployDir, "data"), path.join(outDir, "data"), { recursive: true });
+  await copyFile(
+    path.join(root, "data", "cms", "reviews.json"),
+    path.join(outDir, "data", "reviews.json")
+  );
   await copyFile(
     path.join(root, "public", "search-index.json"),
     path.join(outDir, "search-index.json")
@@ -230,7 +238,8 @@ async function main() {
   console.log("Postup:");
   console.log("  1. Rozbalte ZIP do kořene subdomény sun.coolgui.cz (musí tam být index.html + .htaccess)");
   console.log("  2. Upravte api/config.php pokud potřebujete jiný e-mail");
-  console.log("  3. Otevřete https://sun.coolgui.cz/");
+  console.log("  3. Nastavte oprávnění zápisu pro složku data/ (chmod 755 nebo 775)");
+  console.log("  4. Otevřete https://sun.coolgui.cz/");
   console.log("");
   console.log("Návod: deploy/NAVOD-WEBGLOBE.md");
 }

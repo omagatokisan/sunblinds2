@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Review } from "@/lib/cms/types";
+import { apiEndpoint } from "@/lib/static-hosting";
 import { HomeReveal } from "@/components/home/HomeReveal";
 import { HomeSectionHead } from "@/components/home/HomeSectionHead";
 
@@ -10,9 +11,43 @@ function stars(rating: number) {
   return "★".repeat(rating) + "☆".repeat(5 - rating);
 }
 
-export function HomeReviewsDark({ reviews }: { reviews: Review[] }) {
-  const featured = reviews.slice(0, 3);
+export function HomeReviewsDark({ reviews: initialReviews }: { reviews: Review[] }) {
+  const [reviews, setReviews] = useState(() =>
+    initialReviews.filter((review) => review.status === "approved")
+  );
+
+  const syncReviews = useCallback(async () => {
+    try {
+      const res = await fetch(apiEndpoint("/api/reviews"));
+      if (!res.ok) return;
+      const data = (await res.json()) as { reviews?: Review[] };
+      if (Array.isArray(data.reviews)) {
+        setReviews(data.reviews);
+      }
+    } catch {
+      /* offline */
+    }
+  }, []);
+
+  useEffect(() => {
+    setReviews(initialReviews.filter((review) => review.status === "approved"));
+  }, [initialReviews]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      void syncReviews();
+    }, 45_000);
+    return () => window.clearInterval(timer);
+  }, [syncReviews]);
+
+  const featured = useMemo(() => reviews.slice(0, 3), [reviews]);
   const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    if (active >= featured.length) {
+      setActive(0);
+    }
+  }, [active, featured.length]);
 
   useEffect(() => {
     if (featured.length < 2) return;
@@ -27,19 +62,12 @@ export function HomeReviewsDark({ reviews }: { reviews: Review[] }) {
   return (
     <section className="hd-block hd-reviews" aria-labelledby="hd-reviews-title">
       <div className="hd-shell">
-        <div className="hd-reviews__head">
-          <HomeSectionHead
-            id="hd-reviews-title"
-            eyebrow="Recenze"
-            title="Co říkají zákazníci"
-            align="left"
-          />
-          <HomeReveal delay={100}>
-            <Link href="/recenze" className="hd-link hd-reviews__all">
-              Všechny recenze →
-            </Link>
-          </HomeReveal>
-        </div>
+        <HomeSectionHead
+          id="hd-reviews-title"
+          eyebrow="Recenze"
+          title="Co říkají zákazníci"
+          align="left"
+        />
 
         <ul className="hd-reviews__grid">
           {featured.map((review, index) => (
@@ -67,6 +95,12 @@ export function HomeReviewsDark({ reviews }: { reviews: Review[] }) {
             </li>
           ))}
         </ul>
+
+        <HomeReveal delay={120} className="hd-reviews__actions">
+          <Link href="/recenze#napsat-recenzi" className="hd-btn hd-btn--primary">
+            Napsat recenzi
+          </Link>
+        </HomeReveal>
       </div>
     </section>
   );

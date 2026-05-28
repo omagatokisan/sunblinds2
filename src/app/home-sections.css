@@ -72,6 +72,18 @@
   outline-offset: -1px;
 }
 
+.home-dark .hd-solution-card--icon .hd-solution-card__media--icon {
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--hd-bg) 84%, var(--hd-brand) 16%) 0%,
+    color-mix(in srgb, var(--hd-bg-soft) 90%, black 10%) 100%
+  );
+}
+
+.home-dark .hd-solution-card--icon .hd-solution-card__icon-grid {
+  opacity: 0.65;
+}
+
 /* —— Featured —— */
 .home-dark .hd-featured {
   border-block: none;

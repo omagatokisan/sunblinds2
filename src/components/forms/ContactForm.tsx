@@ -39,7 +39,7 @@ export function ContactForm({ gdprConsent }: { gdprConsent: GdprConsent }) {
 
   if (sent) {
     return (
-      <div className="rounded border border-brand/30 bg-brand/5 p-8 text-center">
+      <div className="reviews-form-success">
         <p className="text-lg font-semibold text-ink">Zpráva odeslána</p>
         <p className="mt-2 text-sm text-muted">Děkujeme — ozveme se co nejdříve.</p>
       </div>

@@ -223,7 +223,7 @@ export function InquiryForm({
       </div>
 
       {step === 1 ? (
-        <section className="animate-slide-up space-y-5 rounded border border-line bg-surface p-6">
+        <section className="animate-slide-up hd-form-panel space-y-5 p-6">
           <h2 className="text-lg font-semibold text-ink">Základní údaje</h2>
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block text-sm">
@@ -305,7 +305,7 @@ export function InquiryForm({
               : [];
 
             return (
-              <div key={line.id} className="rounded border border-line bg-surface p-5">
+              <div key={line.id} className="hd-form-line p-5">
                 <div className="mb-4 flex items-center justify-between">
                   <p className="text-sm font-semibold text-ink">Položka {index + 1}</p>
                   {lines.length > 1 ? (
@@ -418,7 +418,7 @@ export function InquiryForm({
       ) : null}
 
       {step === 3 ? (
-        <section className="animate-slide-up space-y-5 rounded-2xl border border-line bg-surface p-6">
+        <section className="animate-slide-up hd-form-panel space-y-5 p-6">
           <h2 className="text-lg font-semibold text-ink">Shrnutí a odeslání</h2>
           <label className="block text-sm">
             <span className="font-medium text-ink">Obecná poznámka</span>

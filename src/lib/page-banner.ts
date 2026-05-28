@@ -7,7 +7,7 @@ import type {
   Solution,
   PrivacyContent,
 } from "@/lib/cms/types";
-import { SITE_BANNER_IMAGE } from "@/data/site-visuals";
+import { SITE_BANNER_IMAGE, PAGE_BANNER_VIDEOS } from "@/data/site-visuals";
 import { company } from "@/data/company";
 
 export type BannerBreadcrumb = { label: string; href?: string };
@@ -17,6 +17,7 @@ export type PageBannerContent = {
   lead?: string;
   eyebrow?: string;
   image: string;
+  videos?: readonly string[];
   variant: "default" | "dark";
   size: "home" | "page";
   breadcrumbs: BannerBreadcrumb[];
@@ -36,7 +37,15 @@ function matchProductDetail(pathname: string) {
   return /^\/reseni\/[^/]+\/[^/]+\/[^/]+$/.test(pathname);
 }
 
+function normalizePathname(pathname: string) {
+  if (pathname.length > 1 && pathname.endsWith("/")) {
+    return pathname.slice(0, -1);
+  }
+  return pathname;
+}
+
 export function resolvePageBanner(pathname: string, ctx: PageBannerContext): PageBannerContent | null {
+  pathname = normalizePathname(pathname);
   if (pathname.startsWith("/admin") || matchProductDetail(pathname)) return null;
 
   const parts = pathname.split("/").filter(Boolean);
@@ -49,9 +58,10 @@ export function resolvePageBanner(pathname: string, ctx: PageBannerContext): Pag
     if (parts.length === 1) {
       return {
         title: "Všechny oblasti na jednom místě",
-        lead: "Vyberte oblast podle vašeho projektu. U každé najdete produkty s parametry montáže.",
+        lead: "Vyberte oblast podle vašeho projektu nebo rovnou odešlete nezávaznou poptávku. U každé kategorie najdete produkty s parametry montáže.",
         eyebrow: "Řešení",
         image: SITE_BANNER_IMAGE,
+        videos: PAGE_BANNER_VIDEOS.reseni,
         variant: "default",
         size: "page",
         breadcrumbs: [
@@ -87,6 +97,7 @@ export function resolvePageBanner(pathname: string, ctx: PageBannerContext): Pag
         lead: group.summary,
         eyebrow: solution.title,
         image: group.image,
+        videos: PAGE_BANNER_VIDEOS.reseni,
         variant: "default",
         size: "page",
         breadcrumbs: [
@@ -105,6 +116,7 @@ export function resolvePageBanner(pathname: string, ctx: PageBannerContext): Pag
       lead: ctx.contact.heroLead,
       eyebrow: "Kontakt",
       image: SITE_BANNER_IMAGE,
+      videos: PAGE_BANNER_VIDEOS.kontakt,
       variant: "default",
       size: "page",
       crumbs: [{ label: "Úvod", href: "/" }, { label: "Kontakt" }],
@@ -114,6 +126,7 @@ export function resolvePageBanner(pathname: string, ctx: PageBannerContext): Pag
       lead: ctx.showroom.intro,
       eyebrow: "Showroom",
       image: ctx.showroom.heroImage,
+      videos: PAGE_BANNER_VIDEOS.showroom,
       variant: "default",
       size: "page",
       crumbs: [{ label: "Úvod", href: "/" }, { label: "Showroom" }],
@@ -123,6 +136,7 @@ export function resolvePageBanner(pathname: string, ctx: PageBannerContext): Pag
       lead: ctx.servisPage.heroLead,
       eyebrow: "Servis",
       image: "https://sunblinds.cz/images/slider_2/slide2/textilni_roletky.webp",
+      videos: PAGE_BANNER_VIDEOS.servis,
       variant: "dark",
       size: "page",
       crumbs: [{ label: "Úvod", href: "/" }, { label: "Servis" }],
@@ -131,7 +145,8 @@ export function resolvePageBanner(pathname: string, ctx: PageBannerContext): Pag
       title: company.name,
       lead: ctx.aboutPage.heroLead,
       eyebrow: "O nás",
-      image: "https://sunblinds.cz/images/slider_2/slide1/screenove_rolety.webp",
+      image: ctx.showroom.heroImage,
+      videos: PAGE_BANNER_VIDEOS["o-nas"],
       variant: "default",
       size: "page",
       crumbs: [{ label: "Úvod", href: "/" }, { label: "O nás" }],
@@ -140,7 +155,8 @@ export function resolvePageBanner(pathname: string, ctx: PageBannerContext): Pag
       title: "Co říkají naši zákazníci",
       lead: "Reference od lidí, kteří u nás řešili stínění, okna nebo servis.",
       eyebrow: "Recenze",
-      image: SITE_BANNER_IMAGE,
+      image: "https://sunblinds.cz/images/slider_2/slide3/hlinikove_pergoly.webp",
+      videos: PAGE_BANNER_VIDEOS.recenze,
       variant: "default",
       size: "page",
       crumbs: [{ label: "Úvod", href: "/" }, { label: "Recenze" }],

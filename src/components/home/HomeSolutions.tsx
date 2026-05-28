@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Solution } from "@/lib/cms/types";
 import { HomeReveal } from "@/components/home/HomeReveal";
 import { HomeSectionHead } from "@/components/home/HomeSectionHead";
+import { SolutionExtraMedia } from "@/components/solutions/SolutionExtraMedia";
 import { IMG_QUALITY, imgClass, imgSizes } from "@/lib/image-presets";
 
 const CATALOG_OVERVIEW = {
@@ -20,11 +21,6 @@ export function HomeSolutions({
   description: string;
   solutions: Solution[];
 }) {
-  const overviewImage =
-    solutions.find((s) => s.slug === "garazova-vrata")?.heroImage ??
-    solutions[solutions.length - 1]?.heroImage ??
-    solutions[0]?.heroImage;
-
   return (
     <section className="hd-block hd-solutions" aria-labelledby="hd-solutions-title">
       <div className="hd-solutions__mesh" aria-hidden />
@@ -69,35 +65,23 @@ export function HomeSolutions({
               </HomeReveal>
             </li>
           ))}
-          {overviewImage ? (
-            <li key="catalog-overview">
-              <HomeReveal delay={solutions.length * 70}>
-                <Link href={CATALOG_OVERVIEW.href} className="hd-solution-card">
-                  <div className="hd-solution-card__media">
-                    <Image
-                      src={overviewImage}
-                      alt=""
-                      fill
-                      quality={IMG_QUALITY}
-                      className={imgClass.photo}
-                      sizes={imgSizes.catalogThird}
-                    />
-                    <div className="hd-solution-card__shade" aria-hidden />
-                  </div>
-                  <div className="hd-solution-card__copy">
-                    <span className="hd-solution-card__index">
-                      {String(solutions.length + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="hd-solution-card__title">{CATALOG_OVERVIEW.title}</h3>
-                    <p className="hd-solution-card__summary">{CATALOG_OVERVIEW.summary}</p>
-                    <span className="hd-solution-card__arrow" aria-hidden>
-                      →
-                    </span>
-                  </div>
-                </Link>
-              </HomeReveal>
-            </li>
-          ) : null}
+          <li key="catalog-overview">
+            <HomeReveal delay={solutions.length * 70}>
+              <Link href={CATALOG_OVERVIEW.href} className="hd-solution-card hd-solution-card--icon">
+                <SolutionExtraMedia variant="catalog" />
+                <div className="hd-solution-card__copy">
+                  <span className="hd-solution-card__index">
+                    {String(solutions.length + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="hd-solution-card__title">{CATALOG_OVERVIEW.title}</h3>
+                  <p className="hd-solution-card__summary">{CATALOG_OVERVIEW.summary}</p>
+                  <span className="hd-solution-card__arrow" aria-hidden>
+                    →
+                  </span>
+                </div>
+              </Link>
+            </HomeReveal>
+          </li>
         </ul>
       </div>
     </section>

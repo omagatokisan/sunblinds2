@@ -265,8 +265,26 @@ body {
 .site-page-banner-media--poster {
   animation: none;
   will-change: auto;
-  contain: strict;
   pointer-events: none;
+}
+
+.site-page-banner-media--page-video.site-page-banner-media--video {
+  contain: layout style paint;
+}
+
+.site-page-banner-video-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--color-ink, #0a0a0a);
+}
+
+.site-page-banner-media--loading .site-page-banner-video.is-active {
+  opacity: 0;
+}
+
+.site-page-banner-media--video .site-page-banner-video.is-active {
+  z-index: 1;
 }
 
 .site-page-banner-poster {
@@ -278,6 +296,7 @@ body {
 
 .site-page-banner-poster.is-hidden {
   opacity: 0;
+  visibility: hidden;
 }
 
 .site-page-banner-video {
@@ -358,6 +377,17 @@ body {
 .site-page-banner-video-dot.is-active {
   width: 2.75rem;
   background: color-mix(in srgb, white 88%, transparent);
+}
+
+.site-page-banner-video-progress--page {
+  top: clamp(1rem, 2.5vw, 1.25rem);
+  bottom: auto;
+  justify-content: flex-end;
+}
+
+.site-page-banner--page-video .site-page-banner-content {
+  position: relative;
+  z-index: 3;
 }
 
 .site-page-banner--home .site-page-banner-content {

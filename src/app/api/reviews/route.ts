@@ -1,16 +1,32 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getContent, saveContent } from "@/lib/cms/store";
+import { getReviewsStore, addReview, getApprovedReviews } from "@/lib/cms/reviews-store";
 import { newId } from "@/lib/cms/types";
 import { checkRateLimit, clientIp } from "@/lib/rate-limit";
+import { REVIEW_TEXT_MAX, REVIEW_TEXT_MIN } from "@/lib/reviews/constants";
+
+const optionalText = z.preprocess(
+  (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+  z.string().trim().max(200).optional()
+);
 
 const schema = z.object({
-  author: z.string().min(2).max(120),
-  rating: z.number().int().min(1).max(5),
-  text: z.string().min(20).max(2000),
-  location: z.string().max(120).optional(),
-  productHint: z.string().max(200).optional(),
+  author: z.string().trim().min(2, "Jméno musí mít alespoň 2 znaky.").max(120),
+  rating: z.coerce.number().int().min(1).max(5),
+  text: z
+    .string()
+    .trim()
+    .min(REVIEW_TEXT_MIN, "Napište krátkou zkušenost (alespoň 3 znaky).")
+    .max(REVIEW_TEXT_MAX, `Text recenze může mít nejvýše ${REVIEW_TEXT_MAX} znaků.`),
+  location: z.preprocess(
+    (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+    z.string().trim().max(120).optional()
+  ),
+  productHint: optionalText,
 });
+function validationMessage(error: z.ZodError) {
+  return error.issues[0]?.message ?? "Zkontrolujte prosím vyplněné údaje.";
+}
 
 export async function POST(request: Request) {
   const ip = clientIp(request);
@@ -22,8 +38,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const content = await getContent();
-  if (!content.reviewsEnabled) {
+  const store = await getReviewsStore();
+  if (!store.enabled) {
     return NextResponse.json({ error: "Recenze jsou dočasně vypnuté." }, { status: 403 });
   }
 
@@ -36,26 +52,25 @@ export async function POST(request: Request) {
 
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Vyplňte povinná pole." }, { status: 400 });
+    return NextResponse.json({ error: validationMessage(parsed.error) }, { status: 400 });
   }
 
-  content.reviews.unshift({
+  const review = {
     id: newId("rev"),
     ...parsed.data,
-    source: "customer",
-    status: "pending",
+    source: "customer" as const,
+    status: "approved" as const,
     createdAt: new Date().toISOString().slice(0, 10),
-  });
+  };
 
-  await saveContent(content);
-  return NextResponse.json({ ok: true });
+  await addReview(review);
+  return NextResponse.json({ ok: true, review });
 }
 
 export async function GET() {
-  const content = await getContent();
-  if (!content.reviewsEnabled) {
+  const store = await getReviewsStore();
+  if (!store.enabled) {
     return NextResponse.json({ reviews: [], enabled: false });
   }
-  const reviews = content.reviews.filter((r) => r.status === "approved");
-  return NextResponse.json({ reviews, enabled: true });
+  return NextResponse.json({ reviews: getApprovedReviews(store), enabled: true });
 }

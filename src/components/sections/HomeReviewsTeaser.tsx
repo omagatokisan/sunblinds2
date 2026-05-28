@@ -11,17 +11,7 @@ export function HomeReviewsTeaser({ reviews }: { reviews: Review[] }) {
   return (
     <PageSection tone="muted" className="hd-reviews">
       <Container width="wide" className="hd-shell">
-        <div className="hd-reviews__head">
-          <SectionHead
-            eyebrow="Recenze"
-            title="Co říkají zákazníci"
-            align="left"
-            className="!mb-0"
-          />
-          <Link href="/recenze" className="hd-link hd-reviews__all">
-            Všechny recenze →
-          </Link>
-        </div>
+        <SectionHead eyebrow="Recenze" title="Co říkají zákazníci" align="left" />
         <ul className="hd-reviews__grid">
           {approved.map((review) => (
             <li key={review.id}>
@@ -39,6 +29,11 @@ export function HomeReviewsTeaser({ reviews }: { reviews: Review[] }) {
             </li>
           ))}
         </ul>
+        <div className="hd-reviews__actions">
+          <Link href="/recenze#napsat-recenzi" className="hd-btn hd-btn--primary">
+            Napsat recenzi
+          </Link>
+        </div>
       </Container>
     </PageSection>
   );

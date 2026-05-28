@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { IMG_QUALITY, imgClass, imgSizes } from "@/lib/image-presets";
 import { HomeHeroVideo } from "@/components/layout/HomeHeroVideo";
+import { PageBannerVideo } from "@/components/layout/PageBannerVideo";
 import { resolvePageBanner, type PageBannerContext } from "@/lib/page-banner";
 
 export function GlobalPageBanner(ctx: PageBannerContext) {
@@ -17,15 +18,25 @@ export function GlobalPageBanner(ctx: PageBannerContext) {
   if (!content) return null;
 
   const isHome = content.size === "home";
+  const hasVideo = Boolean(content.videos?.length);
 
   return (
     <section
-      className={`site-page-banner ${content.variant === "dark" ? "site-page-banner--dark" : ""} ${isHome ? "site-page-banner--home" : ""}`}
+      className={[
+        "site-page-banner",
+        content.variant === "dark" ? "site-page-banner--dark" : "",
+        isHome ? "site-page-banner--home" : "",
+        hasVideo ? "site-page-banner--page-video" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       aria-label={isHome ? "Úvodní banner" : undefined}
     >
       <div className="site-page-banner-inner">
         {isHome ? (
           <HomeHeroVideo />
+        ) : hasVideo ? (
+          <PageBannerVideo videos={content.videos!} poster={content.image} layout="page" />
         ) : (
           <div className="site-page-banner-media">
             <Image

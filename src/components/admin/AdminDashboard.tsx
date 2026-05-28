@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Product, ProductGroup, Review, SiteContent, Solution, TextBlock } from "@/lib/cms/types";
 import { newId } from "@/lib/cms/types";
+import { REVIEW_TEXT_MAX } from "@/lib/reviews/constants";
 import { AddRow, Field, RemoveRow, TextBlocksEditor, uploadImage } from "./admin-ui";
 
 type Tab =
@@ -308,16 +309,27 @@ export function AdminDashboard() {
                 })
               }
             />
-            {content.reviews.map((review, ri) => (
+            {content.reviews
+              .slice()
+              .sort((a, b) => {
+                const rank = (status: Review["status"]) =>
+                  status === "pending" ? 0 : status === "approved" ? 1 : 2;
+                return rank(a.status) - rank(b.status);
+              })
+              .map((review) => (
               <ReviewEditor
                 key={review.id}
                 review={review}
                 onChange={(r) => {
+                  const ri = content.reviews.findIndex((item) => item.id === review.id);
+                  if (ri === -1) return;
                   const reviews = [...content.reviews];
                   reviews[ri] = r;
                   patch({ reviews });
                 }}
-                onRemove={() => patch({ reviews: content.reviews.filter((_, j) => j !== ri) })}
+                onRemove={() =>
+                  patch({ reviews: content.reviews.filter((item) => item.id !== review.id) })
+                }
               />
             ))}
           </Panel>
@@ -519,7 +531,13 @@ function ReviewEditor({
       </div>
       <Field label="Autor" value={review.author} onChange={(v) => onChange({ ...review, author: v })} />
       <Field label="Hodnocení (1–5)" value={String(review.rating)} onChange={(v) => onChange({ ...review, rating: Math.min(5, Math.max(1, Number(v) || 5)) })} />
-      <Field label="Text recenze" value={review.text} multiline onChange={(v) => onChange({ ...review, text: v })} />
+      <Field
+        label="Text recenze"
+        value={review.text}
+        multiline
+        maxLength={REVIEW_TEXT_MAX}
+        onChange={(v) => onChange({ ...review, text: v })}
+      />
       <Field label="Lokalita" value={review.location ?? ""} onChange={(v) => onChange({ ...review, location: v })} />
       <Field label="Produkt / služba" value={review.productHint ?? ""} onChange={(v) => onChange({ ...review, productHint: v })} />
       <label className="mt-2 block text-sm">
